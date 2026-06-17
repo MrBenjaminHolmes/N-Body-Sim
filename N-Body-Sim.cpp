@@ -1,10 +1,69 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
+using namespace std;
+
+const float G = 1.0f;
+
+class Body
+{
+public:
+    Body(float mass, float radius, sf::Vector2f pos, sf::Vector2f vel)
+        : mass(mass),
+        radius(radius),
+        pos(pos),
+        vel(vel),
+        shape(radius)
+    {
+        shape.setFillColor(sf::Color::White);
+        shape.setOrigin(sf::Vector2f(radius, radius));
+        shape.setPosition(pos);
+    }
+
+    float mass;
+    float radius;
+    sf::Vector2f pos;
+    sf::Vector2f vel;
+    sf::CircleShape shape;
+
+    void update(Body& partner)
+    {
+        sf::Vector2f direction = partner.pos - pos;
+
+        float distance = sqrt(direction.x * direction.x +
+            direction.y * direction.y);
+
+        if (distance < 1.0f)
+            return;
+
+        sf::Vector2f unitDirection = direction / distance;
+
+        float forceMagnitude =
+            G * mass * partner.mass / (distance * distance);
+
+        sf::Vector2f force = unitDirection * forceMagnitude;
+
+        sf::Vector2f accel = force / mass;
+
+        vel += accel;
+        pos += vel;
+
+        shape.setPosition(pos);
+    }
+    
+};
+
+
 int main()
 {
+    vector<Body> objects = {};
     sf::RenderWindow window(sf::VideoMode({ 1000, 1000 }), "N-Body Simulation");
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::White);
+    
+    Body obj1(0.01f, 5.0f, sf::Vector2f(234, 345),sf::Vector2f(0, 0));
+    Body obj2(0.1f, 5.0f, sf::Vector2f(600, 679), sf::Vector2f(0, 0));
+    Body obj3(0.1f, 5.0f, sf::Vector2f(235, 123), sf::Vector2f(0, 0));
+    objects.push_back(obj1);
+    objects.push_back(obj2);
+    objects.push_back(obj3);
 
     while (window.isOpen())
     {
@@ -14,8 +73,20 @@ int main()
                 window.close();
         }
 
+        
+
         window.clear();
-        window.draw(shape);
+        
+        for (Body& obj : objects) {
+            window.draw(obj.shape);
+
+            for (Body& partnerObj : objects) {
+                if (&obj == &partnerObj) {
+                    continue;  
+                }
+                obj.update(partnerObj);
+            }
+        }
         window.display();
     }
 }
