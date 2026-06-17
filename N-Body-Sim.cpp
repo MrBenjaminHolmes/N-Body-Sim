@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode({ 200, 200 }), "SFML works!");
+    sf::RenderWindow window(sf::VideoMode({ 1000, 1000 }), "N-Body Simulation");
     sf::CircleShape shape(100.f);
     shape.setFillColor(sf::Color::White);
 
