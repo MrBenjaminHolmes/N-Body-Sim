@@ -3,7 +3,7 @@
 using namespace std;
 
 const float G = 1.0f;
-
+const float dt = 0.01f;
 class Body
 {
 public:
@@ -44,26 +44,28 @@ public:
 
         sf::Vector2f accel = force / mass;
 
-        vel += accel;
-        pos += vel;
+        vel += accel *dt;
+        pos += vel * dt; 
 
         shape.setPosition(pos);
     }
     
 };
 
-
 int main()
 {
     vector<Body> objects = {};
     sf::RenderWindow window(sf::VideoMode({ 1000, 1000 }), "N-Body Simulation");
     
-    Body obj1(0.01f, 5.0f, sf::Vector2f(234, 345),sf::Vector2f(0, 0));
-    Body obj2(0.1f, 5.0f, sf::Vector2f(600, 679), sf::Vector2f(0, 0));
-    Body obj3(0.1f, 5.0f, sf::Vector2f(235, 123), sf::Vector2f(0, 0));
+    Body obj1(1000.0f, 10.0f,
+        sf::Vector2f(500, 500),
+        sf::Vector2f(0, 0));
+
+    Body obj2(1.0f, 4.0f,
+        sf::Vector2f(700, 500),
+        sf::Vector2f(0, -2.236f));
     objects.push_back(obj1);
     objects.push_back(obj2);
-    objects.push_back(obj3);
 
     while (window.isOpen())
     {
