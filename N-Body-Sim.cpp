@@ -54,9 +54,13 @@ public:
 
 int main()
 {
+
     vector<Body> objects = {};
     sf::RenderWindow window(sf::VideoMode({ 1000, 1000 }), "N-Body Simulation");
+    sf::View mainView;
+    mainView = sf::View(sf::FloatRect({ 0.0f, 0.0f }, { 1000.0f, 1000.0f }));
     
+    //------Basic Orbit Setup-----//
     Body obj1(1000.0f, 10.0f,
         sf::Vector2f(500, 500),
         sf::Vector2f(0, 0));
@@ -64,6 +68,11 @@ int main()
     Body obj2(1.0f, 4.0f,
         sf::Vector2f(700, 500),
         sf::Vector2f(0, -2.236f));
+
+    Body obj3(1.0f, 4.0f,
+        sf::Vector2f(600, 200),
+        sf::Vector2f(0, -2.236f));
+    //-----------------------------//
     objects.push_back(obj1);
     objects.push_back(obj2);
 
@@ -71,24 +80,36 @@ int main()
     {
         while (const std::optional event = window.pollEvent())
         {
-            if (event ->is<sf::Event::Closed>())
+            if (event->is<sf::Event::Closed>())
                 window.close();
+
+            if (const auto* wheel =
+                event->getIf<sf::Event::MouseWheelScrolled>())
+            {
+
+                if (wheel->delta > 0)
+                    mainView.zoom(0.9f);
+                else
+                    mainView.zoom(1.1f);
+            }
         }
-
-        
-
         window.clear();
-        
-        for (Body& obj : objects) {
+        window.setView(mainView); 
+
+        for (Body& obj : objects)
+        {
             window.draw(obj.shape);
 
-            for (Body& partnerObj : objects) {
-                if (&obj == &partnerObj) {
-                    continue;  
-                }
+            for (Body& partnerObj : objects)
+            {
+                if (&obj == &partnerObj)
+                    continue;
+
                 obj.update(partnerObj);
             }
         }
+
         window.display();
+
     }
 }
