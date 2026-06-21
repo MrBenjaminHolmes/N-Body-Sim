@@ -1,11 +1,9 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 using namespace std;
-#include <random>
-#include <ctime>
 
 const float G = 1.0f;
-const float dt = 0.001f;
+const float dt = 0.01f;
 class Body
 {
 public:
@@ -16,7 +14,7 @@ public:
         vel(vel),
         shape(radius)
     {
-        shape.setFillColor(sf::Color::White);
+        shape.setFillColor(sf::Color::Red);
         shape.setOrigin(sf::Vector2f(radius, radius));
         shape.setPosition(pos);
     }
@@ -62,52 +60,18 @@ int main()
     sf::View mainView;
     mainView = sf::View(sf::FloatRect({ 0.0f, 0.0f }, { 1000.0f, 1000.0f }));
 
-    ////------Basic Orbit Setup-----//
-    //Body obj1(1000.0f, 10.0f,
-    //    sf::Vector2f(500, 500),
-    //    sf::Vector2f(0, 0));
+    //------Basic Orbit Setup-----//
+    Body obj1(1000.0f, 10.0f,
+        sf::Vector2f(500, 500),
+        sf::Vector2f(0, 0));
 
-    //Body obj2(1.0f, 4.0f,
-    //    sf::Vector2f(700, 500),
-    //    sf::Vector2f(0, -2.236f));
-    //objects.push_back(obj1);
-    //objects.push_back(obj2);
+    Body obj2(1.0f, 4.0f,
+        sf::Vector2f(700, 500),
+        sf::Vector2f(0, -2.236f));
+    objects.push_back(obj1);
+    objects.push_back(obj2);
 
-    ////-----------------------------//
-    //------Random System Setup------//
-
-    std::mt19937 rng(static_cast<unsigned>(time(nullptr)));
-
-    std::uniform_real_distribution<float> posDist(100.f, 900.f);
-    std::uniform_real_distribution<float> velDist(-1.5f, 1.5f);
-    std::uniform_real_distribution<float> massDist(0.5f, 20.f);
-    std::uniform_real_distribution<float> radiusDist(2.f, 6.f);
-
-    // Create one large central body
-    objects.emplace_back(
-        1000.f,
-        12.f,
-        sf::Vector2f(500.f, 500.f),
-        sf::Vector2f(0.f, 0.f)
-    );
-
- 
-    const int NUM_BODIES = 700;
-
-    for (int i = 0; i < NUM_BODIES; i++)
-    {
-        float mass = massDist(rng);
-        float radius = radiusDist(rng);
-
-        objects.emplace_back(
-            mass,
-            radius,
-            sf::Vector2f(posDist(rng), posDist(rng)),
-            sf::Vector2f(velDist(rng), velDist(rng))
-        );
-    }
-
-    //-------------------------------//
+    //-----------------------------//
 
 
     while (window.isOpen())
