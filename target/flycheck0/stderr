@@ -1,0 +1,18 @@
+    Checking N-Body-Sim v0.1.0 (D:\Code\Git\N-Body-Sim)
+warning: unused dependency `serde`
+ --> Cargo.toml:8:1
+  |
+8 | serde = "1.0"
+  | ^^^^^^^^^^^^^
+  |
+  = note: `cargo::unused_dependencies` is set to `warn` by default
+help: consider removing the dependency on `serde`
+warning: unused dependency `tokio`
+ --> Cargo.toml:7:1
+  |
+7 | tokio = { version = "1.0", features = ["full"] }
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+help: consider removing the dependency on `tokio`
+warning: `N-Body-Sim` (manifest) generated 2 warnings
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.18s
