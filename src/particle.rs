@@ -1,5 +1,5 @@
 use crate::vector::Vector2;
-const G: f64 = 1.0;
+const G: f64 = 6.6743e-11;
 pub struct Particle {
     pub position: Vector2,
     pub velocity: Vector2,

@@ -1,1 +1,1 @@
-D:\Code\Git\N-Body-Sim\target\debug\N-Body-Sim.exe: D:\Code\Git\N-Body-Sim\src\main.rs D:\Code\Git\N-Body-Sim\src\particle.rs D:\Code\Git\N-Body-Sim\src\simulation.rs D:\Code\Git\N-Body-Sim\src\vector.rs
+D:\Code\Git\N-Body-Sim\target\debug\N-Body-Sim.exe: D:\Code\Git\N-Body-Sim\src\main.rs D:\Code\Git\N-Body-Sim\src\particle.rs D:\Code\Git\N-Body-Sim\src\renderer.rs D:\Code\Git\N-Body-Sim\src\simulation.rs D:\Code\Git\N-Body-Sim\src\vector.rs
