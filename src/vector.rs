@@ -11,9 +11,6 @@ impl Vector2 {
     pub fn magnitude(&self) -> f64 {
         (self.x* self.x + self.y* self.y).sqrt()
     }
-    pub fn distance(self, other: Vector2) -> f64 {
-        (((self.x-other.x)*(self.x-other.x))+((self.y-other.y)*(self.y-other.y))).sqrt()
-    }
     pub fn normalise(&self) -> Vector2 {
     let mag = self.magnitude();
 
