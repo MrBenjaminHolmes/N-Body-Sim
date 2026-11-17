@@ -1,8 +1,17 @@
-use crate::particle::Particle;
+use crate::{particle::Particle, quadtree::Node, vector::Vector2};
 use macroquad::prelude::*;
 
+pub fn window_conf() -> Conf {
+    Conf {
+        window_title: "N-Body Simulation".to_owned(),
+        window_width: 800,
+        window_height: 800,
+        ..Default::default()
+    }
+}
+
 pub fn render(particles: &[Particle]) {
-    let scale: f32 = 1e-9;
+    let scale: f32 = 2e-9;
 
     for particle in particles {
         let screen_x = screen_width() / 2.0 + particle.position.x as f32 * scale;
@@ -10,5 +19,25 @@ pub fn render(particles: &[Particle]) {
         let screen_y = screen_height() / 2.0 - particle.position.y as f32 * scale;
 
         draw_circle(screen_x, screen_y, 5.0, WHITE);
+    }
+}
+pub fn draw_square(top_left: Vector2, size: f64) {
+    let scale: f32 = 2e-9;
+
+    let screen_size = size as f32 * scale;
+
+    let screen_x = screen_width() / 2.0 + top_left.x as f32 * scale;
+
+    let screen_y = screen_height() / 2.0 - top_left.y as f32 * scale;
+
+    draw_rectangle_lines(screen_x, screen_y, screen_size, screen_size, 2.0, WHITE);
+}
+pub fn draw_quadtree(node: &Node) {
+    draw_square(node.top_left, node.size as f64);
+
+    if let Some(children) = &node.children {
+        for child in children {
+            draw_quadtree(child);
+        }
     }
 }
