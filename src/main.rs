@@ -1,6 +1,6 @@
 mod vector;
 use vector::Vector2;
-const G: f64 = 6.67430e-11;
+const G: f64 = 1.0;
 
 struct Particle {
     position: Vector2,
@@ -35,6 +35,7 @@ fn grav_force(p1: &Particle, p2: &Particle) -> Option<Vector2> {
 
 
 fn main() {
+    let dt = 0.05; 
     let mut p = Particle {
     position: Vector2 { x: 0.0, y: 0.0 },
     velocity: Vector2 { x: 2.0, y: 3.0 },
@@ -48,28 +49,22 @@ fn main() {
         mass: 10.0,
     };
 
-    let grav_force_vec = grav_force(&p, &p1);
 
-    match grav_force_vec {
-        Some(force) => {
-            println!("Gravitational force: ({}, {})", force.x, force.y);
-            p.acceleration = accel(force, p.mass);
-
-            let opposite_force = force * -1.0;
-            p1.acceleration = accel(opposite_force, p1.mass);
-            
-            println!("Particle 1 acceleration: ({}, {})",
-            p.acceleration.x, p.acceleration.y);
-
-            println!("Particle 2 acceleration: ({}, {})",
-            p1.acceleration.x, p1.acceleration.y);
-        }
-        None => {
-            println!("Cannot calculate gravitational force: particles overlap");
-        }
+    for step in 0..100 {
+    if let Some(force) = grav_force(&p, &p1) {
+        p.acceleration = accel(force, p.mass);
+        p1.acceleration = accel(force * -1.0, p1.mass);
     }
 
-    
+    updateParticle(&mut p, dt);
+    updateParticle(&mut p1, dt);
+
+    if step % 10 == 0 {
+        println!("Step {}:", step);
+        println!("P1: ({}, {})", p.position.x, p.position.y);
+        println!("P2: ({}, {})", p1.position.x, p1.position.y);
+    }
+    }
 
 }
 
