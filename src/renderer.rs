@@ -1,6 +1,9 @@
 use crate::{particle::Particle, quadtree::Node, vector::Vector2};
 use macroquad::prelude::*;
 
+pub static mut SCALE: f32 = 2e-9;
+pub static mut OFFSET_X: f32 = 0.0;
+pub static mut OFFSET_Y: f32 = 0.0;
 pub fn window_conf() -> Conf {
     Conf {
         window_title: "N-Body Simulation".to_owned(),
@@ -11,27 +14,29 @@ pub fn window_conf() -> Conf {
 }
 
 pub fn render(particles: &[Particle]) {
-    let scale: f32 = 2e-9;
-
     for particle in particles {
-        let screen_x = screen_width() / 2.0 + particle.position.x as f32 * scale;
+        let screen_x = screen_width() / 2.0
+            + particle.position.x as f32 * unsafe { SCALE }
+            + unsafe { OFFSET_X };
 
-        let screen_y = screen_height() / 2.0 - particle.position.y as f32 * scale;
+        let screen_y = screen_height() / 2.0 - particle.position.y as f32 * unsafe { SCALE }
+            + unsafe { OFFSET_Y };
 
-        draw_circle(screen_x, screen_y, 5.0, WHITE);
+        draw_circle(screen_x, screen_y, 1.0, WHITE);
     }
 }
 pub fn draw_square(top_left: Vector2, size: f64) {
-    let scale: f32 = 2e-9;
+    let screen_size = size as f32 * unsafe { SCALE };
 
-    let screen_size = size as f32 * scale;
+    let screen_x =
+        screen_width() / 2.0 + top_left.x as f32 * unsafe { SCALE } + unsafe { OFFSET_X };
 
-    let screen_x = screen_width() / 2.0 + top_left.x as f32 * scale;
-
-    let screen_y = screen_height() / 2.0 - top_left.y as f32 * scale;
+    let screen_y =
+        screen_height() / 2.0 - top_left.y as f32 * unsafe { SCALE } + unsafe { OFFSET_Y };
 
     draw_rectangle_lines(screen_x, screen_y, screen_size, screen_size, 2.0, WHITE);
 }
+
 pub fn draw_quadtree(node: &Node) {
     draw_square(node.top_left, node.size as f64);
 

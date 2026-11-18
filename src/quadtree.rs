@@ -30,17 +30,20 @@ impl Node {
             && particle.position.y > bottom
     }
     pub fn particle_index(&self, particle: &Particle) -> usize {
-        if particle.position.x <= 0.0 {
-            if particle.position.y >= 0.0 {
-                return 0;
+        let mid_x = self.top_left.x + self.size / 2.0;
+        let mid_y = self.top_left.y - self.size / 2.0;
+
+        if particle.position.x < mid_x {
+            if particle.position.y >= mid_y {
+                0 // top-left
             } else {
-                return 2;
+                2 // bottom-left
             }
         } else {
-            if particle.position.y > 0.0 {
-                return 1;
+            if particle.position.y >= mid_y {
+                1 // top-right
             } else {
-                return 3;
+                3 // bottom-right
             }
         }
     }
@@ -87,5 +90,31 @@ impl Node {
             Box::new(bottom_left),
             Box::new(bottom_right),
         ]);
+    }
+    pub fn insert_particle(&mut self, particle_index: usize, particles: &[Particle]) {
+        let particle = &particles[particle_index];
+        let contains_bool = self.contains_particle(particle);
+
+        if contains_bool {
+            let quadrant = self.particle_index(particle);
+            if let Some(children) = &mut self.children {
+                children[quadrant].insert_particle(particle_index, particles);
+            } else {
+                if self.particles.is_empty() {
+                    // Empty leaf: just store the particle
+                    self.particles.push(particle_index);
+                } else {
+                    // Occupied leaf: subdivide
+
+                    let old_particle_index = self.particles[0];
+                    self.particles.clear();
+
+                    self.subdivide();
+
+                    self.insert_particle(old_particle_index, particles);
+                    self.insert_particle(particle_index, particles);
+                }
+            }
+        }
     }
 }
