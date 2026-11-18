@@ -1,6 +1,17 @@
 use crate::{particle::Particle, quadtree::Node, vector::Vector2};
 use macroquad::prelude::*;
-
+pub const HEATMAP: [Color; 10] = [
+    Color::from_rgba(8, 11, 42, 255),
+    Color::from_rgba(23, 16, 68, 255),
+    Color::from_rgba(53, 20, 95, 255),
+    Color::from_rgba(97, 32, 120, 255),
+    Color::from_rgba(146, 45, 138, 255),
+    Color::from_rgba(193, 61, 145, 255),
+    Color::from_rgba(228, 91, 157, 255),
+    Color::from_rgba(241, 138, 181, 255),
+    Color::from_rgba(248, 197, 217, 255),
+    Color::from_rgba(25, 255, 255, 255),
+];
 pub static mut SCALE: f32 = 2e-9;
 pub static mut OFFSET_X: f32 = 0.0;
 pub static mut OFFSET_Y: f32 = 0.0;
@@ -37,6 +48,18 @@ pub fn draw_square(top_left: Vector2, size: f64) {
     draw_rectangle_lines(screen_x, screen_y, screen_size, screen_size, 2.0, WHITE);
 }
 
+pub fn draw_square_filled(top_left: Vector2, size: f64, colour: Color) {
+    let screen_size = size as f32 * unsafe { SCALE };
+
+    let screen_x =
+        screen_width() / 2.0 + top_left.x as f32 * unsafe { SCALE } + unsafe { OFFSET_X };
+
+    let screen_y =
+        screen_height() / 2.0 - top_left.y as f32 * unsafe { SCALE } + unsafe { OFFSET_Y };
+
+    draw_rectangle(screen_x, screen_y, screen_size, screen_size, colour);
+}
+
 pub fn draw_quadtree(node: &Node) {
     draw_square(node.top_left, node.size as f64);
 
@@ -46,6 +69,18 @@ pub fn draw_quadtree(node: &Node) {
         }
     }
 }
+
+pub fn draw_quadtree_coloured(node: &Node) {
+    let colour = HEATMAP[node.depth.min(9)];
+    draw_square_filled(node.top_left, node.size as f64, colour);
+
+    if let Some(children) = &node.children {
+        for child in children {
+            draw_quadtree_coloured(child);
+        }
+    }
+}
+
 pub fn draw_tree_debug(root: &Node) {
     // Background panel
     draw_rectangle(

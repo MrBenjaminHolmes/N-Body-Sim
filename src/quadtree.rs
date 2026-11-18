@@ -3,6 +3,7 @@ use crate::vector::Vector2;
 pub struct Node {
     pub top_left: Vector2,
     pub size: f64,
+    pub depth: usize,
     pub children: Option<[Box<Node>; 4]>,
     pub particles: Vec<usize>,
 }
@@ -14,6 +15,7 @@ pub fn init() -> Node {
             y: 2.0e11,
         },
         size: 4.0e11,
+        depth: 0,
         children: None,
         particles: Vec::new(),
     }
@@ -49,28 +51,34 @@ impl Node {
     }
     pub fn subdivide(&mut self) {
         let half = self.size / 2.0;
+        let child_depth = self.depth + 1;
 
         let top_left = Node {
             top_left: self.top_left,
             size: half,
+            depth: child_depth,
             children: None,
             particles: Vec::new(),
         };
+
         let top_right = Node {
             top_left: Vector2 {
                 x: self.top_left.x + half,
                 y: self.top_left.y,
             },
             size: half,
+            depth: child_depth,
             children: None,
             particles: Vec::new(),
         };
+
         let bottom_left = Node {
             top_left: Vector2 {
                 x: self.top_left.x,
                 y: self.top_left.y - half,
             },
             size: half,
+            depth: child_depth,
             children: None,
             particles: Vec::new(),
         };
@@ -81,9 +89,11 @@ impl Node {
                 y: self.top_left.y - half,
             },
             size: half,
+            depth: child_depth,
             children: None,
             particles: Vec::new(),
         };
+
         self.children = Some([
             Box::new(top_left),
             Box::new(top_right),

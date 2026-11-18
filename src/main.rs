@@ -9,12 +9,13 @@ use simulation::simulate_step;
 
 #[macroquad::main(window_conf())]
 async fn main() {
-    let dt = 2000.0;
+    let dt = 20.0;
 
-    let mut particles = particle::random_particles(15);
+    let mut particles = particle::random_particles(1500);
 
     let mut show_tree_debug = false;
     let mut show_tree_outline = false;
+    let mut show_tree_colour = false;
     loop {
         clear_background(BLACK);
         if is_key_pressed(KeyCode::D) {
@@ -22,6 +23,9 @@ async fn main() {
         }
         if is_key_pressed(KeyCode::V) {
             show_tree_outline = !show_tree_outline;
+        }
+        if is_key_pressed(KeyCode::C) {
+            show_tree_colour = !show_tree_colour;
         }
         if is_key_pressed(KeyCode::Up) {
             unsafe {
@@ -61,6 +65,10 @@ async fn main() {
         if show_tree_outline {
             renderer::draw_quadtree(&root);
         }
+        if show_tree_colour {
+            renderer::draw_quadtree_coloured(&root);
+        }
+
         next_frame().await;
     }
 }
