@@ -3,23 +3,25 @@ mod quadtree;
 mod renderer;
 mod simulation;
 mod vector;
-use crate::{quadtree::init, renderer::SCALE};
 use macroquad::prelude::*;
 use renderer::window_conf;
 use simulation::simulate_step;
 
 #[macroquad::main(window_conf())]
 async fn main() {
-    let dt = 360000.0;
+    let dt = 2000.0;
 
     let mut particles = particle::random_particles(15);
 
     let mut show_tree_debug = false;
-
+    let mut show_tree_outline = false;
     loop {
         clear_background(BLACK);
         if is_key_pressed(KeyCode::D) {
             show_tree_debug = !show_tree_debug;
+        }
+        if is_key_pressed(KeyCode::V) {
+            show_tree_outline = !show_tree_outline;
         }
         if is_key_pressed(KeyCode::Up) {
             unsafe {
@@ -52,10 +54,12 @@ async fn main() {
 
         simulate_step(&mut particles, dt);
 
-        renderer::draw_quadtree(&root);
         renderer::render(&particles);
         if show_tree_debug {
             renderer::draw_tree_debug(&root);
+        }
+        if show_tree_outline {
+            renderer::draw_quadtree(&root);
         }
         next_frame().await;
     }
