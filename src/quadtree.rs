@@ -6,6 +6,8 @@ pub struct Node {
     pub depth: usize,
     pub children: Option<[Box<Node>; 4]>,
     pub particles: Vec<usize>,
+    pub total_mass: f64,
+    pub centre_of_mass: Vector2,
 }
 
 pub fn init() -> Node {
@@ -18,6 +20,8 @@ pub fn init() -> Node {
         depth: 0,
         children: None,
         particles: Vec::new(),
+        total_mass: 0.0,
+        centre_of_mass: Vector2 { x: 0.0, y: 0.0 },
     }
 }
 
@@ -59,6 +63,8 @@ impl Node {
             depth: child_depth,
             children: None,
             particles: Vec::new(),
+            total_mass: 0.0,
+            centre_of_mass: Vector2 { x: 0.0, y: 0.0 },
         };
 
         let top_right = Node {
@@ -70,6 +76,8 @@ impl Node {
             depth: child_depth,
             children: None,
             particles: Vec::new(),
+            total_mass: 0.0,
+            centre_of_mass: Vector2 { x: 0.0, y: 0.0 },
         };
 
         let bottom_left = Node {
@@ -81,6 +89,8 @@ impl Node {
             depth: child_depth,
             children: None,
             particles: Vec::new(),
+            total_mass: 0.0,
+            centre_of_mass: Vector2 { x: 0.0, y: 0.0 },
         };
 
         let bottom_right = Node {
@@ -92,6 +102,8 @@ impl Node {
             depth: child_depth,
             children: None,
             particles: Vec::new(),
+            total_mass: 0.0,
+            centre_of_mass: Vector2 { x: 0.0, y: 0.0 },
         };
 
         self.children = Some([
@@ -124,6 +136,33 @@ impl Node {
                     self.insert_particle(old_particle_index, particles);
                     self.insert_particle(particle_index, particles);
                 }
+            }
+        }
+    }
+    pub fn calculate_mass_distribution(&mut self, particles: &[Particle]) {
+        self.total_mass = 0.0;
+        self.centre_of_mass = Vector2 { x: 0.0, y: 0.0 };
+        if let Some(children) = &mut self.children {
+            let mut weighted_x = 0.0;
+            let mut weighted_y = 0.0;
+            for child in children.iter_mut() {
+                child.calculate_mass_distribution(particles);
+                self.total_mass += child.total_mass;
+                weighted_x += child.total_mass * child.centre_of_mass.x;
+                weighted_y += child.total_mass * child.centre_of_mass.y;
+            }
+            if self.total_mass > 0.0 {
+                let com_x = weighted_x / self.total_mass;
+                let com_y = weighted_y / self.total_mass;
+                self.centre_of_mass = Vector2 { x: com_x, y: com_y };
+            }
+        } else {
+            //Leaf Node
+            if !self.particles.is_empty() {
+                let index = self.particles[0];
+                let particle = &particles[index];
+                self.total_mass = particle.mass;
+                self.centre_of_mass = particle.position
             }
         }
     }

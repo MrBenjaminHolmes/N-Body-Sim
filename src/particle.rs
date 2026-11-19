@@ -43,7 +43,7 @@ pub fn random_particles(count: usize) -> Vec<Particle> {
             },
             velocity: Vector2 { x: 0.0, y: 0.0 },
             acceleration: Vector2 { x: 0.0, y: 0.0 },
-            mass: 1.0e30,
+            mass: 1.0,
         });
     }
 

@@ -108,7 +108,7 @@ fn draw_node_debug(node: &Node, depth: usize, name: &str, y: &mut f32) {
     };
 
     let text = format!(
-        "{}{} | depth: {} | size: {:.2e} | TL: ({:.2e}, {:.2e}) | particles: {:?} | children: {}",
+        "{}{} | depth: {} | size: {:.2e} | TL: ({:.2e}, {:.2e}) | particles: {:?} | children: {} | totalMass: {} | COM: ({:.2e}, {:.2e})",
         indent,
         name,
         depth,
@@ -116,7 +116,10 @@ fn draw_node_debug(node: &Node, depth: usize, name: &str, y: &mut f32) {
         node.top_left.x,
         node.top_left.y,
         node.particles,
-        child_count
+        child_count,
+        node.total_mass,
+        node.centre_of_mass.x,
+        node.centre_of_mass.y
     );
 
     draw_text(&text, 20.0, *y, 16.0, GREEN);

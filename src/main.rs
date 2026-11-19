@@ -11,11 +11,12 @@ use simulation::simulate_step;
 async fn main() {
     let dt = 20.0;
 
-    let mut particles = particle::random_particles(1500);
+    let mut particles = particle::random_particles(4);
 
-    let mut show_tree_debug = false;
-    let mut show_tree_outline = false;
+    let mut show_tree_debug = true;
+    let mut show_tree_outline = true;
     let mut show_tree_colour = false;
+
     loop {
         clear_background(BLACK);
         if is_key_pressed(KeyCode::D) {
@@ -54,6 +55,7 @@ async fn main() {
 
         for i in 0..particles.len() {
             root.insert_particle(i, &particles);
+            root.calculate_mass_distribution(&particles);
         }
 
         simulate_step(&mut particles, dt);
