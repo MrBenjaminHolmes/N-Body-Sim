@@ -11,7 +11,7 @@ use simulation::simulate_step;
 async fn main() {
     let dt = 20.0;
 
-    let mut particles = particle::random_particles(4);
+    let mut particles = particle::random_particles(1500);
 
     let mut show_tree_debug = true;
     let mut show_tree_outline = true;
@@ -62,7 +62,7 @@ async fn main() {
 
         renderer::render(&particles);
         if show_tree_debug {
-            renderer::draw_tree_debug(&root);
+            renderer::draw_tree_debug(&root, &particles);
         }
         if show_tree_outline {
             renderer::draw_quadtree(&root);

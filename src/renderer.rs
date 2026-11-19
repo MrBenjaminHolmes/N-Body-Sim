@@ -81,8 +81,7 @@ pub fn draw_quadtree_coloured(node: &Node) {
     }
 }
 
-pub fn draw_tree_debug(root: &Node) {
-    // Background panel
+pub fn draw_tree_debug(root: &Node, particles: &[Particle]) {
     draw_rectangle(
         10.0,
         10.0,
@@ -93,6 +92,13 @@ pub fn draw_tree_debug(root: &Node) {
 
     let mut y = 30.0;
     draw_node_debug(root, 0, "ROOT", &mut y);
+
+    draw_text("------------------------------------------------------------------------------------------", 20.0, y, 16.0, GREEN);
+    y += 20.0;
+
+    for (index, particle) in particles.iter().enumerate() {
+        draw_particle_debug(index, particle, &mut y);
+    }
 }
 
 fn draw_node_debug(node: &Node, depth: usize, name: &str, y: &mut f32) {
@@ -133,4 +139,24 @@ fn draw_node_debug(node: &Node, depth: usize, name: &str, y: &mut f32) {
             draw_node_debug(child, depth + 1, names[i], y);
         }
     }
+}
+fn draw_particle_debug(index: usize, particle: &Particle, y: &mut f32) {
+    if *y > screen_height() - 20.0 {
+        return;
+    }
+
+    let text = format!(
+        "|Index: {}| Position: ({:.2e}, {:.2e}) | Velocity: ({:.2e}, {:.2e}) |  Acceleration: ({:.2e}, {:.2e})|",
+        index,
+        particle.position.x,
+        particle.position.y,
+        particle.velocity.x,
+        particle.velocity.y,
+        particle.acceleration.x,
+        particle.acceleration.y
+    );
+
+    draw_text(&text, 20.0, *y, 16.0, GREEN);
+
+    *y += 20.0;
 }
